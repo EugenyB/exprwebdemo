@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:view>
+    <h:head>
+        <title>Expressions</title>
+        <h:outputStylesheet library="css" name="styles.css"/>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h:dataTable value="#{expressionBean.expressions}" var="e">
+                <h:column>
+                    <f:facet name="header">id</f:facet>
+                    <h:outputText value="#{e.id}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Expression</f:facet>
+                    <h:outputText value="#{e.expression}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Result</f:facet>
+                    <h:outputText value="#{e.result}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Edit</f:facet>
+                    <h:commandButton value="Edit" action="#{expressionBean.edit(e)}"/>
+                </h:column>
+            </h:dataTable>
+        </h:form>
+        <h:form>
+            <h:outputLabel value="New expression" for="expr"/>
+            <h:inputText id="expr" value="#{expressionBean.current}"/>
+            <h:commandButton value="Add" action="#{expressionBean.add()}"/>
+        </h:form>
+        <h:form>
+            <h:outputLabel value="Value less than" for="value"/>
+            <h:inputText value="#{expressionBean.value}" id="value"/>
+            <h:commandButton value="Find" action="#{expressionBean.findLessThan()}"/>
+        </h:form>
+    </h:body>
+</f:view>
+</html>
