@@ -1,101 +1,67 @@
-package com.example.exprwebdemo.beans;
+package com.example.exprwebdemo.beans
 
-import com.example.exprwebdemo.dao.ExpressionDao;
-import com.example.exprwebdemo.entities.Expression;
-import jakarta.ejb.EJB;
-import jakarta.enterprise.context.SessionScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
+import com.example.exprwebdemo.dao.ExpressionDao
+import com.example.exprwebdemo.entities.Expression
+import jakarta.ejb.EJB
+import jakarta.enterprise.context.SessionScoped
+import jakarta.inject.Inject
+import jakarta.inject.Named
+import java.io.Serializable
 
 @Named
 @SessionScoped
-public class ExpressionBean implements Serializable {
+open class ExpressionBean : Serializable {
     @EJB
-    ExpressionDao expressionDao;
+    var expressionDao: ExpressionDao? = null
 
     @Inject
-    CalculatorService calculatorService;
+    private lateinit var calculatorService: CalculatorService
 
-    private String current;
+    var current: String? = null
+    var editExpression: Expression? = null
+        private set
+    var message: String? = null
+        private set
+    var value = 0.0
+    var found = emptyList<Expression>()
+        private set
+    val expressions: List<Expression>
+        get() = expressionDao!!.findAll()
 
-    private Expression editExpression;
-
-    private String message;
-
-    private double value;
-
-    private List<Expression> found = Collections.emptyList();
-
-    public List<Expression> getFound() {
-        return found;
-    }
-
-    public double getValue() {
-        return value;
-    }
-
-    public void setValue(double value) {
-        this.value = value;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public Expression getEditExpression() {
-        return editExpression;
-    }
-
-    public String getCurrent() {
-        return current;
-    }
-
-    public void setCurrent(String current) {
-        this.current = current;
-    }
-
-    public List<Expression> getExpressions() {
-        return expressionDao.findAll();
-    }
-
-    public String add() {
-        try {
-            double v = calculatorService.calculate(current);
-            Expression expression = new Expression();
-            expression.setExpression(current);
-            expression.setResult(v);
-            expressionDao.save(expression);
-            current = "";
-            message = "";
-            return "index";
-        } catch (Exception e) {
-            return "error";
+    open fun add(): String {
+        return try {
+            val v = calculatorService!!.calculate(current)
+            val expression = Expression()
+            expression.expression = current
+            expression.result = v
+            expressionDao!!.save(expression)
+            current = ""
+            message = ""
+            "index"
+        } catch (e: Exception) {
+            "error"
         }
     }
 
-    public String edit(Expression e) {
-        editExpression = e;
-        return "edit";
+    open fun edit(e: Expression?): String {
+        editExpression = e
+        return "edit"
     }
 
-    public String finishEdit() {
-        try {
-            double v = calculatorService.calculate(editExpression.getExpression());
-            editExpression.setResult(v);
-            expressionDao.update(editExpression);
-            return "index";
-        } catch (Exception e) {
-            message = "Please correct errors!";
-            return "edit";
+    open fun finishEdit(): String {
+        return try {
+            val v = calculatorService!!.calculate(editExpression!!.expression)
+            editExpression!!.result = v
+            expressionDao!!.update(editExpression!!)
+            "index"
+        } catch (e: Exception) {
+            message = "Please correct errors!"
+            "edit"
         }
     }
 
-    public String findLessThan() {
-        found = expressionDao.findLessThan(value);
-        return "searchresult";
+    open fun findLessThan(): String {
+        found = expressionDao!!.findLessThan(value)
+        return "searchresult"
     }
 }
