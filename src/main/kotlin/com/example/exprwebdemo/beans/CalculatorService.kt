@@ -1,13 +1,13 @@
-package com.example.exprwebdemo.beans;
+package com.example.exprwebdemo.beans
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Named;
-import net.objecthunter.exp4j.ExpressionBuilder;
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Named
+import net.objecthunter.exp4j.ExpressionBuilder
 
 @Named
 @ApplicationScoped
-public class CalculatorService {
-    public double calculate(String expression) {
-        return new ExpressionBuilder(expression).build().evaluate();
+open class CalculatorService {
+    open fun calculate(expression: String?): Double {
+        return ExpressionBuilder(expression).build().evaluate()
     }
 }
